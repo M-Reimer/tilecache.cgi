@@ -33,7 +33,7 @@ my $BORDER_RIGHT = 10.01;
 my $BORDER_TOP = 50.22;
 
 # How long are tiles valid in your cache before we try to update them?
-my $MAX_CACHE_TIME_DAYS = 1;
+my $MAX_CACHE_TIME_DAYS = 2;
 
 # The server we mirror from.
 my $TILE_SERVER = 'https://a.tile.openstreetmap.org';

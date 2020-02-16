@@ -56,6 +56,7 @@ use File::stat;
 use LWP::UserAgent;
 use POSIX qw(strftime);
 use Fcntl qw/:DEFAULT :flock/;
+use Compress::Zlib;
 
 { #main
   # PATH_INFO contains the tile path and has to be defined!
@@ -164,6 +165,28 @@ sub AppendLineToFile {
   close($listfh);
 }
 
+# PNG validator. Validates header and CRC32 checksums.
+sub ValidatePNG {
+  my ($aData) = @_;
+  open(my $fh, '<', \$aData) or return 0;
+
+  # Validate header first
+  read($fh, my $header, 8);
+  return 0 if ($header ne "\x89PNG\x0d\x0a\x1a\x0a");
+
+  # CRC check every chunk
+  while(read($fh, my $blength, 4)) {
+    my ($length) = unpack('L>', $blength);
+    return 0 if (read($fh, my $chunktype, 4) != 4);
+    return 0 if (read($fh, my $chunkdata, $length) != $length);
+    return 0 if (read($fh, my $bsavedcrc, 4) != 4);
+    my $savedcrc = unpack('L>', $bsavedcrc);
+    return 0 if ($savedcrc != crc32("$chunktype$chunkdata"));
+  }
+
+  return 1;
+}
+
 # Fetches one tile from $aURL to $aCachePath
 # File locking is used to prevent multiple downloads of the same file and
 # race conditions while writing the actual image file
@@ -186,7 +209,7 @@ sub GetOneTile {
   $ua->default_header('Referer' => "https://$ENV{SERVER_NAME}/");
   $ua->timeout(30); # Reduce the timeout to 30 seconds
   my $response = $ua->get($aURL);
-  if ($response->is_success) {
+  if ($response->is_success && ValidatePNG($response->content)) {
     $success = 1;
     my $content = $response->content;
     sysopen(my $fh, $aCachePath, O_WRONLY | O_CREAT) or die($!);

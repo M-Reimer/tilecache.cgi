@@ -1,5 +1,5 @@
-tilecache.cgi
-=============
+osmtilecache.cgi
+================
 
 Introduction
 ------------
@@ -12,11 +12,11 @@ In this repository you'll find a tile caching proxy with the following features:
 
 To access the tiles, the URL will be as follows:
 
-    tilecache.cgi/$zoom-$tilex-$tiley.png
+    osmtilecache.cgi/$zoom-$tilex-$tiley.png
 
 You have to set up a "cron mechanism" which loads the following URL from time to time to get the update done:
 
-    tilecache.cgi/update
+    osmtilecache.cgi/update
 
 You should load this regularly so the list of files fetched from the official tile server does not get too long to be considered to be mass downloading.
 

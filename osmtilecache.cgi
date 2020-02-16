@@ -1,6 +1,6 @@
 #!/usr/bin/perl
-#    tilecache.cgi - Map tile cache proxy with asynchronous tile update
-#    Copyright (C) 2019 Manuel Reimer <manuel.reimer@gmx.de>
+#    osmtilecache.cgi - OSM Map tile cache proxy with asynchronous tile update
+#    Copyright (C) 2020 Manuel Reimer <manuel.reimer@gmx.de>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
